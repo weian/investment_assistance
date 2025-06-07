@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Portfolio Value History 历史市值: {{ portfolio.name }}</h2>
+<a href="/portfolio/{{ portfolio.id }}">&larr; Back 返回</a>
+<table>
+    <thead>
+        <tr>
+            <th>Date 日期</th>
+            <th>Total Value 总市值</th>
+            <th>Stocks 股票</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for v in values %}
+        <tr>
+            <td>{{ v.date }}</td>
+            <td>${{ '%.2f'|format(v.total_value) }}</td>
+            <td>
+                <ul>
+                {% for s in v.stocks %}
+                    <li>{{ s.ticker }}: {{ s.shares }} shares @ ${{ '%.2f'|format(s.value) if s.value else 'N/A' }}</li>
+                {% endfor %}
+                </ul>
+            </td>
+        </tr>
+    {% else %}
+        <tr><td colspan="3">No history yet. 暂无历史记录。</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %} 

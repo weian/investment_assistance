@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Portfolios 资产组合</h2>
+<ul>
+    {% for portfolio in portfolios %}
+        <li><a href="/portfolio/{{ portfolio.id }}">{{ portfolio.name }}</a></li>
+    {% else %}
+        <li>No portfolios yet. 暂无资产组合。</li>
+    {% endfor %}
+</ul>
+<h3>Add Portfolio 新建资产组合</h3>
+<form method="post" action="/add-portfolio">
+    <input type="text" name="name" placeholder="Portfolio Name 组合名" required>
+    <button type="submit">Add 添加</button>
+</form>
+{% endblock %} 

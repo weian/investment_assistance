@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Portfolio: {{ portfolio.name }}</h2>
+<form method="post" action="/portfolio/{{ portfolio.id }}/update-name" style="display:inline;">
+    <input type="text" name="name" value="{{ portfolio.name }}" required>
+    <button type="submit">Update Name 修改名称</button>
+</form>
+<a href="/">&larr; Back 返回</a>
+<form method="post" action="/delete-portfolio/{{ portfolio.id }}" style="display:inline;" onsubmit="return confirm('Delete this portfolio and all its stocks? 确认删除该组合及其所有股票？');">
+    <button type="submit" style="color:red;">Delete Portfolio 删除组合</button>
+</form>
+
+<h3>Stocks 股票</h3>
+<ul>
+    {% for stock in stocks %}
+        <li>{{ stock.ticker }}: {{ stock.shares }} shares
+            <form method="post" action="/portfolio/{{ portfolio.id }}/delete-stock/{{ stock.id }}" style="display:inline;" onsubmit="return confirm('Delete this stock? 确认删除该股票？');">
+                <button type="submit" style="color:red;">Delete 删除</button>
+            </form>
+            {% if prices and prices[stock.ticker] %}
+                (Last Close: ${{ '%.2f'|format(prices[stock.ticker]) }})
+            {% endif %}
+        </li>
+    {% else %}
+        <li>No stocks in this portfolio. 该组合暂无股票。</li>
+    {% endfor %}
+</ul>
+
+<h3>Add Stock 添加股票</h3>
+<form method="post" action="/portfolio/{{ portfolio.id }}/add-stock">
+    <input type="text" name="ticker" placeholder="Ticker 股票代码" required>
+    <input type="number" step="any" name="shares" placeholder="Shares 持有股数" required>
+    <button type="submit">Add 添加</button>
+</form>
+
+<h3>Portfolio Value 组合市值</h3>
+<form method="get" action="">
+    <input type="hidden" name="show_value" value="1">
+    <label>Date (YYYY-MM-DD): <input type="date" name="date" value="{{ date_str or '' }}"></label>
+    <button type="submit">Refresh 刷新</button>
+</form>
+<p><a href="/portfolio/{{ portfolio.id }}/history">View Value History 查看历史市值</a></p>
+{% if value is not none %}
+    <p>Total Value 总市值: <strong>${{ '%.2f'|format(value) }}</strong></p>
+{% endif %}
+{% endblock %} 
