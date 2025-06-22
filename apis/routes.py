@@ -77,4 +77,17 @@ def update_portfolio_name(portfolio_id: int, name: str = Form(...), db: Session 
     updated = services.update_portfolio_name(db, portfolio_id, name)
     if not updated:
         raise HTTPException(status_code=404, detail="Portfolio not found")
-    return RedirectResponse(url=f"/portfolio/{portfolio_id}", status_code=status.HTTP_303_SEE_OTHER) 
+    return RedirectResponse(url=f"/portfolio/{portfolio_id}", status_code=status.HTTP_303_SEE_OTHER)
+
+@router.post("/portfolio/{portfolio_id}/delete-value")
+def delete_portfolio_value(portfolio_id: int, value_date: str = Form(...), db: Session = Depends(get_db)):
+    try:
+        # Parse the date string
+        parsed_date = datetime.strptime(value_date, "%Y-%m-%d").date()
+        success = services.delete_portfolio_value_by_date(db, portfolio_id, parsed_date)
+        if not success:
+            raise HTTPException(status_code=404, detail="Portfolio value not found for this date")
+    except ValueError:
+        raise HTTPException(status_code=400, detail="Invalid date format")
+    
+    return RedirectResponse(url=f"/portfolio/{portfolio_id}/history", status_code=status.HTTP_303_SEE_OTHER) 

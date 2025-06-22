@@ -4,6 +4,49 @@
     <meta charset="UTF-8">
     <title>Investment Assistant</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+    <style>
+        /* Custom table styling for better width and readability */
+        table {
+            width: 100%;
+            max-width: 1200px;
+            table-layout: fixed;
+            word-wrap: break-word;
+        }
+        
+        /* Specific column widths for history table */
+        .history-table th:nth-child(1) { width: 12%; } /* Date */
+        .history-table th:nth-child(2) { width: 15%; } /* Total Value */
+        .history-table th:nth-child(3) { width: 30%; } /* Stocks */
+        .history-table th:nth-child(4) { width: 25%; } /* Stock Values */
+        .history-table th:nth-child(5) { width: 18%; } /* Action */
+        
+        /* Make table cells more readable */
+        td, th {
+            padding: 12px 8px;
+            vertical-align: top;
+        }
+        
+        /* Style lists in table cells */
+        td ul {
+            margin: 0;
+            padding-left: 15px;
+        }
+        
+        td ul li {
+            margin-bottom: 4px;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            table {
+                font-size: 14px;
+            }
+            
+            td, th {
+                padding: 8px 4px;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>

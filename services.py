@@ -108,4 +108,19 @@ def update_portfolio_name(db: Session, portfolio_id: int, new_name: str):
         db.commit()
         db.refresh(portfolio)
         return portfolio
-    return None 
+    return None
+
+def delete_portfolio_value_by_date(db: Session, portfolio_id: int, value_date: date):
+    """Delete portfolio value record for a specific date"""
+    portfolio_value = db.query(PortfolioValue).filter_by(
+        portfolio_id=portfolio_id, 
+        date=value_date
+    ).first()
+    
+    if portfolio_value:
+        # Delete associated stock values first (cascade should handle this, but being explicit)
+        db.query(StockValue).filter_by(portfolio_value_id=portfolio_value.id).delete()
+        db.delete(portfolio_value)
+        db.commit()
+        return True
+    return False 

@@ -2,12 +2,14 @@
 {% block content %}
 <h2>Portfolio Value History 历史市值: {{ portfolio.name }}</h2>
 <a href="/portfolio/{{ portfolio.id }}">&larr; Back 返回</a>
-<table>
+<table class="history-table">
     <thead>
         <tr>
             <th>Date 日期</th>
             <th>Total Value 总市值</th>
             <th>Stocks 股票</th>
+            <th>Stock Values 个股市值</th>
+            <th>Action 操作</th>
         </tr>
     </thead>
     <tbody>
@@ -22,9 +24,26 @@
                 {% endfor %}
                 </ul>
             </td>
+            <td>
+                <ul>
+                {% for s in v.stocks %}
+                    <li>{{ s.ticker }}: ${{ '%.2f'|format(s.shares * s.value) if s.value else 'N/A' }}</li>
+                {% endfor %}
+                </ul>
+            </td>
+            <td>
+                <form method="POST" action="/portfolio/{{ portfolio.id }}/delete-value" style="display: inline;">
+                    <input type="hidden" name="value_date" value="{{ v.date }}">
+                    <button type="submit" 
+                            onclick="return confirm('Are you sure you want to delete the value for {{ v.date }}? 确定要删除{{ v.date }}的市值记录吗？')"
+                            style="background-color: #ff4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">
+                        Delete 删除
+                    </button>
+                </form>
+            </td>
         </tr>
     {% else %}
-        <tr><td colspan="3">No history yet. 暂无历史记录。</td></tr>
+        <tr><td colspan="5">No history yet. 暂无历史记录。</td></tr>
     {% endfor %}
     </tbody>
 </table>
